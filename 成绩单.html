@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>成绩单</title>
+    <style>
+        #app {
+            display: flex;
+            justify-content: center;
+        }
+
+        .table {
+            margin-right: 20px;
+        }
+
+        td, th {
+            width: 100px;
+        }
+
+        .menu {
+            padding: 20px;
+        }
+
+        .menu div {
+            margin: 5px;
+            height: 40px;
+        }
+
+        .menu button {
+            width: 60px;
+            height: 30px;
+            background-color: #6f8dc7;
+            border-radius: 5px;
+        }
+
+        .red {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <table class="table" border="1">
+        <thead align="center">
+        <tr>
+            <th>编号</th>
+            <th>科目</th>
+            <th>成绩</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody v-if="list.length>0" align="center">
+        <tr v-for="(item,index) in list" :key="item.id">
+            <td>{{index + 1}}</td>
+            <td> {{item.name}}</td>
+            <td :class="{red: item.score<60}"> {{item.score}}</td>
+            <td><a href="#" @click="del(item.id)">删除</a></td>
+        </tr>
+        </tbody>
+        <tbody v-else align="center">
+        <tr>
+            <td colspan="4">暂无数据</td>
+        </tr>
+        </tbody>
+        <tfoot>
+        <tr>
+            <td colspan="4" align="center">总分：{{totalScore}} 平均分：{{avgScore}}</td>
+        </tr>
+        </tfoot>
+    </table>
+    <div class="menu">
+        <div>
+            <label for="object">科目</label>
+            <input id="object" v-model.trim="subject" type="text" placeholder="请输入科目">
+        </div>
+        <div>
+            <label for="score">分数</label>
+            <input id="score" v-model.number="score" type="text" placeholder="请输入分数">
+        </div>
+        <button class="add" @click="add">添加</button>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+<script>
+  const app = new Vue({
+    el: "#app",
+    data: {
+      list: [
+        {
+          id: "0",
+          name: "语文",
+          score: 46
+        },
+        {
+          id: "1",
+          name: "英语",
+          score: 86
+        },
+        {
+          id: "2",
+          name: "数学",
+          score: 96
+        }
+      ],
+      subject: "",
+      score: ""
+    },
+    computed: {
+      totalScore() {
+        return this.list.reduce((pre, item) => pre + item.score, 0);
+      },
+      avgScore() {
+        return this.list.length ? (this.totalScore / this.list.length).round(2) : 0;
+      }
+    },
+    methods: {
+      del(id) {
+        this.list = this.list.filter(item => item.id !== id);
+      },
+      add() {
+        if (!this.subject || !this.score) {
+          alert("添加内容不得为空！");
+          return;
+        }
+        this.list.push({id: +new Date(), name: this.subject, score: this.score});
+        this.subject = "";
+        this.score = "";
+      }
+    }
+  });
+</script>
+</body>
+</html>
