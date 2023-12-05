@@ -353,3 +353,61 @@ const router = new VueRouter({
 })
 ```
 使用时，配置路径以及需要展示的位置，使用<router-view></router-view>占位+
+##### 声明式导航 - 跳转传参
+- 查询参数传参
+  - 跳转：```<router-link to="/path?参数名=参数值&参数名2=参数值2"></router-link>```
+  - 获取：```this.$route.query.参数名```
+- 动态路由传参
+  - 配置动态路由：```path:"/path/:参数名"```；如果不传参数也去匹配组件，可以设置成```path:"/path/:参数名?"```，使用可选符‘?’。  
+  - 跳转：```<router-link to="/path/参数值"></router-link>```
+  - 获取：```this.$route.params.参数名```
+  
+##### Vue 路由重定向
+```{ path: 匹配路径, redirect: 重定向的路径 }```
+
+##### Vue 路由模式
+- hash路由，默认hash模式
+  
+  比如：http://localhost:8080/#/home
+
+- history路由
+
+  比如：http://localhost:8080/home
+
+  history需要后台服务的配置，否则会出现404的情况。
+```javascript
+// 路由模式设置
+const router = new VueRouter({
+  routes,
+  mode:'hash' // history,路由模式
+})
+```
+##### Vue 编程式导航
+- 路由跳转方式
+  - path路径跳转
+  - name命名路由跳转
+- 路由传参
+  - query
+  - params 
+
+
+##### keep-alive 组件缓存
+- keep-alive是Vue内置组件，当包裹动态路由时，会缓存不活动的组件实例，而不是销毁。
+- keep-alive是一个抽象组件，它不会渲染成一个DOM元素，也不会出现父组件当中。
+
+优点：
+* 在组件切换过程中，把切换出去的组件保留在内存中，防止重复渲染DOM，减少加载时间及性能消耗，提高用户体验。
+
+问题：
+* 会缓存所有被切换的组件
+
+keep-alive三个属性：
+* include 组件名数组，只有匹配的组件会被缓存
+* exclude 组件名数组，只有匹配的组件不会被缓存
+* max 最多可缓存的组件实例个数
+
+组件被缓存之后，不会触发created、mounted、destroyed钩子，因此多出两个生命周期。
+
+两个生命周期钩子：
+* actived 激活时，组件被看到时触发
+* deactived 失活时，组件离开时触发
